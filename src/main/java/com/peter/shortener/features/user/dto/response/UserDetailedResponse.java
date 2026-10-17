@@ -1,0 +1,16 @@
+package com.peter.shortener.features.user.dto.response;
+
+import java.time.Instant;
+import java.util.UUID;
+
+public record UserDetailedResponse(
+        UUID id,
+        String email,
+        String firstName,
+        String lastName,
+        String picture,
+        boolean emailVerified,
+        String provider,
+        Instant createdAt
+) {
+}

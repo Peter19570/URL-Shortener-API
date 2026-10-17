@@ -1,0 +1,52 @@
+package com.peter.shortener.features.shared.dto;
+
+import com.peter.shortener.features.user.model.User;
+import org.jspecify.annotations.Nullable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
+
+public record UserPrincipal( // Adjust to add more info into context holder
+        UUID id,
+        String email,
+        String password,
+        Collection<? extends GrantedAuthority> authorities
+) implements UserDetails {
+
+    public static UserPrincipal fromDatabase(User user){
+        return new UserPrincipal(
+                user.getId(),
+                user.getEmail(),
+                user.getPassword(),
+                List.of()
+
+                // List.of(new SimpleGrantedAuthority("ROLE_" + user.getUserRole().name()))
+        );
+    }
+
+    public static UserPrincipal fromToken(
+            UUID userId,
+            String email,
+            Collection<? extends GrantedAuthority> authorities){
+
+        return new UserPrincipal(userId, email, null, authorities);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.authorities;
+    }
+
+    @Override
+    public @Nullable String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+}

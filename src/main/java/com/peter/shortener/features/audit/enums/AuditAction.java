@@ -1,0 +1,19 @@
+package com.peter.shortener.features.audit.enums;
+
+public enum AuditAction {
+    REGISTER,
+    LOCAL_LOGIN,
+    OAUTH_LOGIN,
+    PASSKEY_LOGIN,
+    LOGIN_FAILURE,
+    LOGIN_ATTEMPT,
+    LOGOUT,
+    PASSWORD_RESET,
+    EMAIL_VERIFIED,
+    EMAIL_CHANGED,
+    ACCOUNT_SOFT_DELETED,
+    ACCOUNT_HARD_DELETED,
+    SOCIAL_LINK,
+    SOCIAL_UNLINK,
+    PASSKEY_LINK
+}

@@ -1,0 +1,35 @@
+package com.peter.shortener.features.auth.service.memory;
+
+import com.peter.shortener.features.shared.exceptions.custom.NotFoundException;
+import com.github.benmanes.caffeine.cache.Cache;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+
+import java.security.SecureRandom;
+
+import static com.peter.shortener.features.auth.service.helpers.AuthHelper.hashToken;
+
+@Component
+@RequiredArgsConstructor
+public class OTPService { // One-Time Password Code
+
+    private final SecureRandom random;
+    private final Cache<String, String> otpStore;
+
+    public String generateOtp(String userId) {
+        String otpCode = String.format("%06d", random.nextInt(1000000));
+        otpStore.put(userId, hashToken(otpCode));
+
+        return otpCode;
+    }
+
+    public void validateOtp(String userId, String otpCode) {
+        String savedHash = otpStore.getIfPresent(userId);
+
+        if (savedHash == null || !savedHash.equals(hashToken(otpCode))) {
+            throw new NotFoundException("Invalid or expired code");
+        }
+
+        otpStore.invalidate(userId);
+    }
+}
